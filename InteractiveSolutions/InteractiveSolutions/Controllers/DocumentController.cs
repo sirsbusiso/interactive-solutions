@@ -1,5 +1,6 @@
 ﻿using InteractiveSolutions.Models;
 using InteractiveSolutions.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ namespace InteractiveSolutions.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class DocumentController : ControllerBase
     {
         private IDocumentService _documentService;
@@ -21,9 +23,10 @@ namespace InteractiveSolutions.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Document>>> Get()
+        [Route("GetAllByCustomer/{id}")]
+        public async Task<ActionResult<List<Document>>> GetAllByCustomer(int id)
         {
-            var documents = await _documentService.GetAll();
+            var documents = await _documentService.GetAllByCustomer(id);
 
             return Ok(documents);
         }

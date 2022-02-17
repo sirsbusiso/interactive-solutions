@@ -74,7 +74,7 @@ namespace InteractiveSolutions.Services
 
                 return rowCount;
             }
-            catch (Exception ex)
+            catch
             {
                 transaction.Rollback();
                 return 0;
@@ -95,7 +95,7 @@ namespace InteractiveSolutions.Services
 
                 return rowCount;
             }
-            catch (Exception ex)
+            catch
             {
                 transaction.Rollback();
                 return 0;

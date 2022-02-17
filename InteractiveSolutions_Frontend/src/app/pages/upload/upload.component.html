@@ -18,7 +18,7 @@
           <p class="text-danger text-center">
             {{ errorMessage }}
           </p>
-          <form>
+          <form #uploadForm="ngForm" (ngSubmit)="upload()">
             <div class="form-group">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -67,6 +67,9 @@
               <button type="submit" class="btn btn-primary btn-block">
                 Submit
               </button>
+            </div>
+            <div class="text-center">
+              <a [routerLink]="['/summary']">Back to Summary</a>
             </div>
             <!-- form-group// -->
           </form>

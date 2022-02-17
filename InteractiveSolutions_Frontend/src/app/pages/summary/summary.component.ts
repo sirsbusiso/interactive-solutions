@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DocumentService } from '../../services/document.service';
 
 @Component({
   selector: 'app-summary',
@@ -8,9 +9,13 @@ import { Component, OnInit } from '@angular/core';
 export class SummaryComponent implements OnInit {
   files: File[] = [];
 
-  constructor() {}
+  constructor(private documentService: DocumentService) {}
 
   ngOnInit(): void {}
+
+  getAllByCustomer() {
+    //this.documentService.getAllByCustomer()
+  }
 
   download(i: number): void {}
 
