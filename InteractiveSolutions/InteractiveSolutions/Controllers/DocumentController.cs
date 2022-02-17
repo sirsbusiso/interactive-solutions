@@ -32,9 +32,20 @@ namespace InteractiveSolutions.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] List<Document> documents)
+        public async Task<ActionResult> Post([FromBody] UploadDocumentModel model)
         {
-            int result = await _documentService.Upload(documents);
+            foreach (var document in model.Documents)
+            {
+                if (document.FileAsBase64.Contains(","))
+                {
+                    document.FileAsBase64 = document.FileAsBase64.Substring(document.FileAsBase64.IndexOf(",") + 1);
+                }
+
+                //theFile.FileAsByteArray = Convert.FromBase64String(theFile.FileAsBase64);
+                document.File = Convert.FromBase64String(document.FileAsBase64);
+            }
+
+            int result = await _documentService.Upload(model.Documents);
 
             return Ok(result);
         }

@@ -30,14 +30,12 @@ export class CustomerService {
   }
 
   login(idNumber: string) {
-    debugger;
     return this.http
       .post(this.baseUrl + '/Customer/Login', {
         idNumber: idNumber,
       })
       .pipe(
         map((response: any) => {
-          debugger;
           // login successful if there's a jwt token in the response
           if (response && response.token) {
             // store response details and jwt token in local storage to keep user logged in between page refreshes

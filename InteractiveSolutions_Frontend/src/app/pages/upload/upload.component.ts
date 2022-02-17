@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { FileToUpload } from 'src/app/models/fileToUpload';
 import { CustomerService } from 'src/app/services/customer.service';
 import { DocumentService } from 'src/app/services/document.service';
@@ -13,12 +13,12 @@ export class UploadComponent implements OnInit {
   errorMessage = '';
   fileName = '';
 
-  files: File[] = [];
+  documents: FileToUpload[] = [];
 
   constructor(
     private documentService: DocumentService,
     private customerService: CustomerService,
-    private http: HttpClient
+    private router: Router
   ) {}
 
   ngOnInit(): void {}
@@ -28,42 +28,48 @@ export class UploadComponent implements OnInit {
     const file: File = event.target.files[0];
 
     if (file) {
-      //this.fileName = file.name;
-      // const formData = new FormData();
-      // formData.append('file', file);
-      // const upload$ = this.http.post('/api/thumbnail-upload', formData);
-      // upload$.subscribe();
-
       if (file.size > 5242880) {
         this.errorMessage = 'Please upload a file less than 5MB in size.';
         return;
       }
 
-      this.files.push(file);
+      let reader = new FileReader();
+
+      reader.onload = (e) => {
+        let fileToUpload = new FileToUpload();
+
+        fileToUpload.custId = parseInt(
+          '' + this.customerService.currentSessionValue?.customerId
+        );
+        fileToUpload.fileName = file.name;
+        fileToUpload.fileSize = file.size;
+        fileToUpload.fileType = file.type;
+        fileToUpload.dateAdded = new Date();
+        fileToUpload.fileAsBase64 = '' + reader.result?.toString();
+
+        this.documents.push(fileToUpload);
+      };
+
+      reader.readAsDataURL(file);
     }
   }
 
   remove(index: number): void {
-    this.files.splice(index, 1);
+    this.documents.splice(index, 1);
   }
 
   upload(): void {
-    // let filesToUpload: FileToUpload[] = [];
-    // let reader = new FileReader();
-    // reader.onload = (e) => {
-    // this.files.forEach((f) => {
-    //     let file = new FileToUpload();
-    //     file.custId = '' + this.customerService.currentSessionValue?.customerId;
-    //     file.fileName = f.name;
-    //     file.fileSize = f.size;
-    //     file.fileType = f.type;
-    //     file.dateAdded = new Date();
-    //     file.fileAsBase64 = '' + reader.result?.toString();
-    //   });
-    // };
-    // reader.readAsDataURL(f);
-    // filesToUpload.push(file);
-    // console.log(filesToUpload);
-    // this.documentService.uploadDocuments(filesToUpload);
+    this.documentService
+      .uploadDocuments({ documents: this.documents })
+      .subscribe((data) => {
+        console.log(data);
+        if (data === 1) {
+          this.router.navigate(['/summary']);
+        } else {
+          alert(
+            'There was a problem with your document upload. Contact the site administrator for more info.'
+          );
+        }
+      });
   }
 }

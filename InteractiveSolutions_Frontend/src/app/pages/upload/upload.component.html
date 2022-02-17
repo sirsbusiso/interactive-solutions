@@ -46,10 +46,10 @@
               <ul class="list-group list-group-flush">
                 <li
                   class="list-group-item d-flex justify-content-between align-items-center"
-                  *ngFor="let file of files; let i = index"
+                  *ngFor="let file of documents; let i = index"
                   [attr.data-index]="i"
                 >
-                  {{ file.name }}
+                  {{ file.fileName }}
                   <div class="float-right">
                     <button
                       type="button"

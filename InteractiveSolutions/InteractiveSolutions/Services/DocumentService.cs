@@ -67,14 +67,23 @@ namespace InteractiveSolutions.Services
             {
                 foreach (var document in documents)
                 {
-                    rowCount += await connection.ExecuteAsync("sp_AddDocument", param: document, transaction: transaction, commandType: CommandType.StoredProcedure);
+                    var parameters = new 
+                    {
+                        document.CustId,
+                        document.FileName,
+                        document.FileType,
+                        document.File,
+                        document.DateAdded
+                    };
+
+                    rowCount += await connection.ExecuteAsync("sp_AddDocument", param: parameters, transaction: transaction, commandType: CommandType.StoredProcedure);
                 }
 
                 transaction.Commit();
 
                 return rowCount;
             }
-            catch
+            catch (Exception ex)
             {
                 transaction.Rollback();
                 return 0;

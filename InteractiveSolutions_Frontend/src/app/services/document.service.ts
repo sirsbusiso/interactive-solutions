@@ -22,8 +22,8 @@ export class DocumentService {
   }
 
   uploadDocuments(documents: any) {
-    debugger;
+    let url = this.baseUrl + '/Document';
 
-    return this.http.post(this.baseUrl + '/Document', { documents });
+    return this.http.post<any>(url, documents);
   }
 }
