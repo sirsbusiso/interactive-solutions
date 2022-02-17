@@ -17,6 +17,7 @@ CREATE TABLE tb_Customer
  [DoB] datetime null,
  [IdNumber] varchar(13) null
 )
+GO
 
 CREATE TABLE tb_Document
 (
@@ -27,6 +28,21 @@ CREATE TABLE tb_Document
  [File] varbinary(max) null,
  [DateAdded] datetime null,
 )
+GO
+
+INSERT INTO [dbo].[tb_Customer]
+           ([Name]
+           ,[Surname]
+           ,[Age]
+           ,[DoB]
+           ,[IdNumber])
+     VALUES
+           ('February'
+           ,'Sixteenth'
+           ,28
+           ,'2022-02-16'
+           ,'8001282275080')
+GO
 
 CREATE PROCEDURE sp_AddDocument 
 	@CustId INT,
@@ -36,9 +52,6 @@ CREATE PROCEDURE sp_AddDocument
 	@DateAdded DATETIME
 AS
 BEGIN
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	--SET NOCOUNT ON;
 	
     INSERT INTO dbo.tb_Document ([CustId], [FileName], [FileType], [File], [DateAdded]) 
                     VALUES (@CustId, @FileName, @FileType, @File, @DateAdded)
@@ -55,7 +68,6 @@ END
 GO
 
 CREATE PROCEDURE sp_GetDocumentById
-	-- Add the parameters for the stored procedure here
 	@Id int
 AS
 BEGIN
