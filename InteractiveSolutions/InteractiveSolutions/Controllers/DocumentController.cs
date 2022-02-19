@@ -1,11 +1,14 @@
 ﻿using InteractiveSolutions.Models;
 using InteractiveSolutions.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace InteractiveSolutions.Controllers
@@ -57,6 +60,21 @@ namespace InteractiveSolutions.Controllers
             int result = await _documentService.Delete(id);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("Download/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Download(int id)
+        {
+            var document = await _documentService.GetById(id);
+
+            var contentType = "application/pdf";
+            var fileContentResult = new FileContentResult(document.File, contentType)
+            {
+                FileDownloadName = document.FileName
+            };
+            return fileContentResult;
         }
     }
 }

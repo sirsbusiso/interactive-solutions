@@ -33,25 +33,17 @@ namespace InteractiveSolutions.Services
             using var connection = Connection;
             connection.Open();
 
-            var documents = await connection.QueryAsync<Document>("EXEC sp_GetAllDocumentsByCustomer", new { CustId = custId }, commandType: CommandType.StoredProcedure);
+            var documents = await connection.QueryAsync<Document>("sp_GetAllDocumentsByCustomer", new { CustId = custId }, commandType: CommandType.StoredProcedure);
             return documents.ToList();
         }
 
-        public async Task<FileStream> Download(int id)
+        public async Task<Document> GetById(int id)
         {
             using var connection = Connection;
             connection.Open();
 
-            FileStream file = null; // continue on this
-
-            var document = await connection.QueryFirstOrDefaultAsync<Document>("EXEC sp_GetDocumentById", new { Id = id }, commandType: CommandType.StoredProcedure);
-
-            if (document != null)
-            {
-                //convert to file
-            }
-
-            return file;
+            var document = await connection.QueryFirstOrDefaultAsync<Document>("sp_GetDocumentById", new { Id = id }, commandType: CommandType.StoredProcedure);
+            return document;
         }
 
         public async Task<int> Upload(List<Document> documents)

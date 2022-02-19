@@ -33,6 +33,11 @@ export class UploadComponent implements OnInit {
         return;
       }
 
+      if (file.type !== 'application/pdf') {
+        this.errorMessage = 'File type accepted is PDF only.';
+        return;
+      }
+
       let reader = new FileReader();
 
       reader.onload = (e) => {

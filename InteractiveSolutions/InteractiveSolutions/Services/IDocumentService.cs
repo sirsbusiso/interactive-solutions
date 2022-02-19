@@ -9,8 +9,7 @@ namespace InteractiveSolutions.Services
     {
         Task<int> Delete(int id);
         Task<List<Document>> GetAllByCustomer(int custId);
+        Task<Document> GetById(int id);
         Task<int> Upload(List<Document> documents);
-
-        Task<FileStream> Download(int id);
     }
 }
