@@ -10,10 +10,14 @@ import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, switchMap, filter, take } from 'rxjs/operators';
 
 import { CustomerService } from '../services/customer.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private customerService: CustomerService) {}
+  constructor(
+    private customerService: CustomerService,
+    private router: Router
+  ) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -24,10 +28,32 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           return throwError(() => new Error('Unauthorized'));
         } else {
+          if (
+            this.tokenExpired(
+              '' + this.customerService.currentSessionValue.token
+            )
+          ) {
+            // this.router.navigate(['/login'], { queryParams: { returnUrl: state.url } });
+            this.router.navigate(['/login']);
+          }
+
           console.log(error);
           return throwError(() => new Error(error));
         }
       })
     );
   }
+
+  private tokenExpired(token: string) {
+    const expiry = JSON.parse(atob(token.split('.')[1])).exp;
+    return Math.floor(new Date().getTime() / 1000) >= expiry;
+  }
+
+  // ngOnInit() {
+  //   if (this.tokenExpired(token)) {
+  //     // token expired
+  //   } else {
+  //     // token valid
+  //   }
+  // }
 }
