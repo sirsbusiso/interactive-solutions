@@ -64,7 +64,6 @@ namespace InteractiveSolutions.Controllers
 
         [HttpGet]
         [Route("Download/{id}")]
-        [AllowAnonymous]
         public async Task<IActionResult> Download(int id)
         {
             var document = await _documentService.GetById(id);

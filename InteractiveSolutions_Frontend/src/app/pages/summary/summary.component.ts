@@ -5,6 +5,7 @@ import { CustomerService } from 'src/app/services/customer.service';
 import { DocumentService } from '../../services/document.service';
 import { saveAs } from 'file-saver';
 import * as FileSaver from 'file-saver';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-summary',
@@ -14,17 +15,27 @@ import * as FileSaver from 'file-saver';
 export class SummaryComponent implements OnInit {
   documents: Document[] = [];
   custId = 0;
+  isUserSignedIn = false;
 
   constructor(
     private customerService: CustomerService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.isUserSignedIn = this.customerService.currentSessionValue
+      ? true
+      : false;
     this.custId = parseInt(
       '' + this.customerService.currentSessionValue.customerId
     );
     this.getAllByCustomer(this.custId);
+  }
+
+  logout() {
+    localStorage.removeItem('currentSession');
+    this.router.navigate(['/login']);
   }
 
   getAllByCustomer(custId: number) {

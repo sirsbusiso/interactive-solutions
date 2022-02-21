@@ -4,6 +4,9 @@
       <aside class="col-sm-4 summary-card">
         <div class="card">
           <article class="card-body">
+            <a (click)="logout()" class="float-right" *ngIf="isUserSignedIn"
+              >Logout</a
+            >
             <h4 class="card-title text-center mb-6 mt-1">Summary</h4>
             <!-- <hr /> -->
             <p style="margin: 10px">

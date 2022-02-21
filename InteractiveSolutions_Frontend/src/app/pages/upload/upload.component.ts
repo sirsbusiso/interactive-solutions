@@ -12,6 +12,7 @@ import { DocumentService } from 'src/app/services/document.service';
 export class UploadComponent implements OnInit {
   errorMessage = '';
   fileName = '';
+  isUserSignedIn = false;
 
   documents: FileToUpload[] = [];
 
@@ -21,7 +22,11 @@ export class UploadComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.isUserSignedIn = this.customerService.currentSessionValue
+      ? true
+      : false;
+  }
 
   onFileSelected(event: any): void {
     this.errorMessage = '';
@@ -67,8 +72,7 @@ export class UploadComponent implements OnInit {
     this.documentService
       .uploadDocuments({ documents: this.documents })
       .subscribe((data) => {
-        console.log(data);
-        if (data === 1) {
+        if (data > 1) {
           this.router.navigate(['/summary']);
         } else {
           alert(
@@ -76,5 +80,10 @@ export class UploadComponent implements OnInit {
           );
         }
       });
+  }
+
+  logout() {
+    localStorage.removeItem('currentSession');
+    this.router.navigate(['/login']);
   }
 }
