@@ -35,7 +35,7 @@ namespace InteractiveSolutions.Services
             using var connection = Connection;            
 
             var customer = await connection.QueryFirstOrDefaultAsync<Customer>("SELECT * FROM tb_Customer WHERE IdNumber = @IdNumber",
-                new { IdNumber = login.IdNumber });
+                new { login.IdNumber });
 
             if (customer != null)
             {
